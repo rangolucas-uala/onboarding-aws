@@ -18,9 +18,12 @@ public class SaveContactHandler
     private String DYNAMODB_TABLE_NAME = "contacts-lucas";
     private Regions REGION = Regions.US_EAST_1;
 
+    public SaveContactHandler() {
+        this.initDynamoDbClient();
+    }
+
     public String handleRequest(
             Contact personRequest, Context context) {
-        this.initDynamoDbClient(context);
         persistData(personRequest);
         return "Success";
     }
@@ -36,7 +39,7 @@ public class SaveContactHandler
                                 .withString("status", contact.getStatus())));
     }
 
-    private void initDynamoDbClient(Context context) {
+    private void initDynamoDbClient() {
         AmazonDynamoDBClient client = new AmazonDynamoDBClient();
         client.setRegion(Region.getRegion(REGION));
         this.dynamoDb = new DynamoDB(client);
