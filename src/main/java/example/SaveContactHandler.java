@@ -20,13 +20,8 @@ public class SaveContactHandler
 
     public String handleRequest(
             Contact personRequest, Context context) {
-        context.getLogger().log("Log 1");
         this.initDynamoDbClient(context);
-        context.getLogger().log("Log 2");
-
         persistData(personRequest);
-        context.getLogger().log("Log 3");
-
         return "Success";
     }
 
@@ -42,12 +37,8 @@ public class SaveContactHandler
     }
 
     private void initDynamoDbClient(Context context) {
-        context.getLogger().log("Log 1.1");
         AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-        context.getLogger().log("Log 1.2");
         client.setRegion(Region.getRegion(REGION));
-        context.getLogger().log("Log 1.3");
         this.dynamoDb = new DynamoDB(client);
-        context.getLogger().log("Log 1.4");
     }
 }
