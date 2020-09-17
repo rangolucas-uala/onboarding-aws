@@ -11,16 +11,7 @@ import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-public class SaveContactHandler
-        implements RequestHandler<Contact, String> {
-
-    private DynamoDB dynamoDb;
-    private String DYNAMODB_TABLE_NAME = "contacts-lucas";
-    private Regions REGION = Regions.US_EAST_1;
-
-    public SaveContactHandler() {
-        this.initDynamoDbClient();
-    }
+public class SaveContactHandler extends ContactHandler<Contact, String> {
 
     public String handleRequest(
             Contact personRequest, Context context) {
@@ -30,18 +21,12 @@ public class SaveContactHandler
 
     private PutItemOutcome persistData(Contact contact)
             throws ConditionalCheckFailedException {
-        return this.dynamoDb.getTable(DYNAMODB_TABLE_NAME)
+        return this.contactsTable
                 .putItem(
                         new PutItemSpec().withItem(new Item()
                                 .withString("id", contact.getId())
                                 .withString("firstName", contact.getFirstName())
                                 .withString("lastName", contact.getLastName())
                                 .withString("status", contact.getStatus())));
-    }
-
-    private void initDynamoDbClient() {
-        AmazonDynamoDBClient client = new AmazonDynamoDBClient();
-        client.setRegion(Region.getRegion(REGION));
-        this.dynamoDb = new DynamoDB(client);
     }
 }
